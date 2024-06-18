@@ -1,0 +1,1223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="IRIS" version="26" zv="IRIS for Windows (x86-64) 2023.1.2 (Build 450U)" ts="2024-06-11 09:02:06">
+<Class name="developer.data.Defrag10">
+<Super>%Persistent,%Populate</Super>
+<TimeChanged>66988,44104.5282239</TimeChanged>
+<TimeCreated>66873,39667.120505</TimeCreated>
+
+<Index name="unique">
+<PrimaryKey>1</PrimaryKey>
+<Properties>storeCd,patientId,zUpdateCount</Properties>
+</Index>
+
+<Index name="i1">
+<Data>漢字氏名,カナ氏名,生年月日</Data>
+<Properties>storeCd,patientId</Properties>
+</Index>
+
+<Index name="i2">
+<Properties>漢字氏名,カナ氏名,生年月日</Properties>
+</Index>
+
+<Index name="a1">
+<Data>未使用区分</Data>
+<Properties>dele,storeCd,patientId</Properties>
+</Index>
+
+<Property name="z施設">
+<Type>%Integer</Type>
+<InitialExpression>1</InitialExpression>
+<Required>1</Required>
+</Property>
+
+<Property name="z登録者">
+<Type>%Integer</Type>
+<InitialExpression>1</InitialExpression>
+<Required>1</Required>
+</Property>
+
+<Property name="z登録日時">
+<Description>
+データ属性としての登録時刻。※ DBへのinsert時刻とは違う。パッチ当てによるinsertの場合などはここは "データ" としての登録時刻を入れる。DB insert時刻は wrb.sys.sequence が保持している。</Description>
+<Type>%DateTime</Type>
+<InitialExpression>$zdt($h,3,1)</InitialExpression>
+<Required>1</Required>
+</Property>
+
+<Property name="xActive">
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+<Required>1</Required>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).DeleActive()"/>
+</Property>
+
+<Property name="zUpdateCount">
+<Description>
+更新通番。</Description>
+<Type>%Integer</Type>
+<InitialExpression>1</InitialExpression>
+<Required>1</Required>
+</Property>
+
+<Property name="z初回登録者">
+<Type>%Integer</Type>
+<InitialExpression>1</InitialExpression>
+<Required>1</Required>
+</Property>
+
+<Property name="z初回登録日時">
+<Description>
+YYYYMMDDhhmmss形式　※インデックスの検索方法が決まり次第確定する。</Description>
+<Type>%DateTime</Type>
+<InitialExpression>$zdt($h,3,1)</InitialExpression>
+<Required>1</Required>
+</Property>
+
+<Property name="dele">
+<Description>
+削除フラグ</Description>
+<Type>%Boolean</Type>
+<InitialExpression>0</InitialExpression>
+<Required>1</Required>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).DeleActive()"/>
+</Property>
+
+<Property name="旧ID">
+<Description>
+ひとつ前の履歴の %ID。</Description>
+<Type>%Integer</Type>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).Null()"/>
+</Property>
+
+<Property name="storeCd">
+<Type>%String</Type>
+<Required>1</Required>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).StoreCd()"/>
+</Property>
+
+<Property name="patientId">
+<Type>%String</Type>
+<Required>1</Required>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).PatientId()"/>
+</Property>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 基本情報 -----------------------------
+
+]]></Content>
+</UDLText>
+
+<Property name="漢字氏名">
+<Description>
+姓_全角スペース_名</Description>
+<Type>%String</Type>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).Name()"/>
+</Property>
+
+<Property name="カナ氏名">
+<Description>
+姓_半角スペース_名</Description>
+<Type>%String</Type>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).KanaName()"/>
+</Property>
+
+<Property name="ローマ字氏名">
+<Description>
+姓_半角スペース_名</Description>
+<Type>%String</Type>
+<Parameter name="POPSPEC" value="##class(%Library.PopulateUtils).Name()"/>
+</Property>
+
+<Property name="漢字旧姓">
+<Type>%String</Type>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).Null()"/>
+</Property>
+
+<Property name="カナ旧姓">
+<Type>%String</Type>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).Null()"/>
+</Property>
+
+<Property name="性別">
+<Type>%String</Type>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).Sex()"/>
+</Property>
+
+<Property name="生年月日">
+<Description>
+YYYYMMDD形式</Description>
+<Type>%Date</Type>
+<Parameter name="POPSPEC" value="##class(%Library.PopulateUtils).Date($zdh(&quot;1900-01-01&quot;,3),+$h)"/>
+</Property>
+
+<Property name="死亡日時">
+<Description>
+YYYYMMDDhhmmss形式</Description>
+<Type>%DateTime</Type>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).DeathDate()"/>
+</Property>
+
+<Property name="コメント">
+<Type>%String</Type>
+</Property>
+
+<Property name="新患登録日">
+<Description>
+YYYYMMDD形式</Description>
+<Type>%Date</Type>
+</Property>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 付加情報 -----------------------------
+
+]]></Content>
+</UDLText>
+
+<Property name="ABO血液型">
+<Type>%String</Type>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).ABO()"/>
+</Property>
+
+<Property name="RH血液型">
+<Type>%String</Type>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).RH()"/>
+</Property>
+
+<Property name="未使用区分">
+<Type>%Boolean</Type>
+<Parameter name="POPSPEC" value="##class(developer.data.Defrag10).NotUse()"/>
+</Property>
+
+<Method name="DeathDate">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<ReturnType>%DateTime</ReturnType>
+<Implementation><![CDATA[$case($r(99), 0:$zdt($h,3,1), :"")
+]]></Implementation>
+</Method>
+
+<Method name="NotUse">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[$case($r(99), 0:1, :0)
+]]></Implementation>
+</Method>
+
+<Method name="ABO">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[$case($r(4), 0:"A", 1:"B", 2:"O", :"AB")
+]]></Implementation>
+</Method>
+
+<Method name="RH">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[$case($r(2), 0:"+", :"-")
+]]></Implementation>
+</Method>
+
+<Method name="Sex">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[$case($r(3), 0:"1", 1:"2", :"3")
+]]></Implementation>
+</Method>
+
+<Method name="StoreCd">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA["1173"
+]]></Implementation>
+</Method>
+
+<Method name="PatientId">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA["1173"_$tr($j($g(^developer.data.Defrag10D,0) + 1, 7)," ","0")
+]]></Implementation>
+</Method>
+
+<Method name="Null">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[""
+]]></Implementation>
+</Method>
+
+<Method name="DeleActive">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	s rdm = $r(11)
+	q $s(rdm > 0: 1, 1:0)
+]]></Implementation>
+</Method>
+
+<Method name="Name">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[..NameSei()_"　"_..NameMei()
+]]></Implementation>
+</Method>
+
+<Method name="NameSei">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+$case($r(256),
+	0:"富士",
+	1:"北海道",
+	2:"青森",
+	3:"岩手",
+	4:"宮城",
+	5:"秋田",
+	6:"山形",
+	7:"福島",
+	8:"茨城",
+	9:"栃木",
+	10:"群馬",
+	11:"埼玉",
+	12:"千葉",
+	13:"東京都",
+	14:"神奈川",
+	15:"新潟",
+	16:"富山",
+	17:"石川",
+	18:"福井",
+	19:"山梨",
+	20:"長野",
+	21:"岐阜",
+	22:"静岡",
+	23:"愛知",
+	24:"三重",
+	25:"滋賀",
+	26:"京都府",
+	27:"大阪府",
+	28:"兵庫",
+	29:"奈良",
+	30:"和歌山",
+	31:"鳥取",
+	32:"島根",
+	33:"岡山",
+	34:"広島",
+	35:"山口",
+	36:"徳島",
+	37:"香川",
+	38:"愛媛",
+	39:"福岡",
+	40:"佐賀",
+	41:"長崎",
+	42:"熊本",
+	43:"大分",
+	44:"宮崎",
+	45:"鹿児島",
+	46:"沖縄",
+	47:"東北",
+	48:"近畿",
+	49:"四国",
+	50:"中部",
+	51:"浅草",
+	52:"九州",
+	53:"関東",
+	54:"石舞台",
+	55:"青塚",
+	56:"赤土山",
+	57:"行灯山",
+	58:"天塚",
+	59:"馬見",
+	60:"植山",
+	61:"梅山",
+	62:"産土",
+	63:"大鳥塚",
+	64:"興福",
+	65:"飛鳥",
+	66:"安部文殊",
+	67:"安国",
+	68:"石山",
+	69:"一向",
+	70:"永源",
+	71:"延暦",
+	72:"大峰山",
+	73:"温泉",
+	74:"寛永",
+	75:"元願",
+	76:"伊吹山",
+	77:"大山",
+	78:"剣山",
+	79:"阿蘇山",
+	80:"霧島山",
+	81:"九重山",
+	82:"祖母山",
+	83:"槍ヶ岳",
+	84:"穂高岳",
+	85:"聖岳",
+	86:"乗鞍岳",
+	87:"白山",
+	88:"塩見岳",
+	89:"光岳",
+	90:"笠ヶ岳",
+	91:"御嶽山",
+	92:"天城山",
+	93:"間ノ岳",
+	94:"赤石岳",
+	95:"荒島岳",
+	96:"鹿島槍ヶ岳",
+	97:"五竜岳",
+	98:"白馬岳",
+	99:"水晶岳",
+	100:"立山",
+	101:"剣岳",
+	102:"薬師岳",
+	103:"鷲羽岳",
+	104:"八ヶ岳",
+	105:"妙高山",
+	106:"焼岳",
+	107:"巻機山",
+	108:"鳳凰山",
+	109:"火打山",
+	110:"仙丈ケ岳",
+	111:"大菩薩嶺",
+	112:"霧ヶ峰",
+	113:"美ヶ原",
+	114:"雨飾山",
+	115:"赤城山",
+	116:"磐梯山",
+	117:"八甲田山",
+	118:"那須岳",
+	119:"鳥海山",
+	120:"蔵王山",
+	121:"吾妻山",
+	122:"朝日岳",
+	123:"羊蹄山",
+	124:"羅臼岳",
+	125:"十勝岳",
+	126:"大雪山",
+	127:"阿寒岳",
+	128:"利尻岳",
+	129:"のぞみ",
+	130:"ひかり",
+	131:"こだま",
+	132:"はやて",
+	133:"やまびこ",
+	134:"なすの",
+	135:"とき",
+	136:"たにがわ",
+	137:"あさま",
+	138:"つばさ",
+	139:"こまち",
+	140:"つばめ",
+	141:"あおば",
+	142:"あさひ",
+	143:"銀座線",
+	144:"丸ノ内線",
+	145:"日比谷線",
+	146:"東西線",
+	147:"千代田線",
+	148:"有楽町線",
+	149:"半蔵門線",
+	150:"南北線",
+	151:"副都心線",
+	152:"浅草線",
+	153:"三田線",
+	154:"新宿線",
+	155:"山の手線",
+	156:"御堂筋線",
+	157:"谷町線",
+	158:"四ツ橋線",
+	159:"中央線",
+	160:"千日前線",
+	161:"境筋線",
+	162:"新宿",
+	163:"銀座",
+	164:"横浜",
+	165:"歌舞伎",
+	166:"原宿",
+	167:"札幌",
+	168:"函館",
+	169:"旭川",
+	170:"網走",
+	171:"仙台",
+	172:"高知",
+	173:"石鎚山",
+	174:"浅間山",
+	175:"大江戸線",
+	176:"八十五原",
+	177:"八十一原",
+	178:"八十六原",
+	179:"八十二原",
+	180:"八十七原",
+	181:"八十三原",
+	182:"八十八原",
+	183:"八十四原",
+	184:"八十九原",
+	185:"九十原",
+	186:"九十一原",
+	187:"九十二原",
+	188:"九十三原",
+	189:"九十四原",
+	190:"九十五原",
+	191:"九十六原",
+	192:"九十七原",
+	193:"九十八原",
+	194:"九十九原",
+	195:"百原",
+	196:"百一原",
+	197:"百二原",
+	198:"百三原",
+	199:"二十八藤",
+	200:"三十六藤",
+	201:"三十七藤",
+	202:"二十九藤",
+	203:"三十八藤",
+	204:"三十藤",
+	205:"三十九藤",
+	206:"三十一藤",
+	207:"四十藤",
+	208:"三十二藤",
+	209:"四十一藤",
+	210:"三十三藤",
+	211:"四十二藤",
+	212:"三十四藤",
+	213:"四十三藤",
+	214:"三十五藤",
+	215:"四十四藤",
+	216:"四十五藤",
+	217:"四十六藤",
+	218:"四十七藤",
+	219:"四十八藤",
+	220:"四十九藤",
+	221:"五十藤",
+	222:"五十一藤",
+	223:"五十二藤",
+	224:"五十三藤",
+	225:"五十四藤",
+	226:"百四原",
+	227:"百五原",
+	228:"百六原",
+	229:"百七原",
+	230:"百八原",
+	231:"百九原",
+	232:"一谷",
+	233:"二谷",
+	234:"三谷",
+	235:"四谷",
+	236:"五谷",
+	237:"六谷",
+	238:"七谷",
+	239:"八谷",
+	240:"九谷",
+	241:"十谷",
+	242:"十一谷",
+	243:"十二谷",
+	244:"五十五藤",
+	245:"五十六藤",
+	246:"五十七藤",
+	247:"五十八藤",
+	248:"五十九藤",
+	249:"六十藤",
+	250:"六十一藤",
+	251:"六十二藤",
+	252:"六十三藤",
+	253:"六十四藤",
+	254:"六十五藤",
+	255:"六十六藤",
+	:"六十七藤")
+]]></Implementation>
+</Method>
+
+<Method name="NameMei">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<Implementation><![CDATA[
+$case($r(80),
+	0:"二郎",
+	1:"こだま",
+	2:"三郎",
+	3:"はやて",
+	4:"四郎",
+	5:"五郎",
+	6:"やまびこ",
+	7:"六郎",
+	8:"なすの",
+	9:"とき",
+	10:"あさま",
+	11:"つばさ",
+	12:"七郎",
+	13:"八郎",
+	14:"こまち",
+	15:"つばめ",
+	16:"九郎",
+	17:"あおば",
+	18:"あさひ",
+	19:"花子",
+	20:"富士子",
+	21:"十郎",
+	22:"太郎",
+	23:"富士実",
+	24:"富士絵",
+	25:"竹夫",
+	26:"富士太",
+	27:"富士夫",
+	28:"富士香",
+	29:"富士世",
+	30:"富士菜",
+	31:"富士吉",
+	32:"桜",
+	33:"富士助",
+	34:"葵",
+	35:"富士之助",
+	36:"富士郎",
+	37:"桔梗",
+	38:"菖蒲",
+	39:"富士男",
+	40:"富士松",
+	41:"青",
+	42:"秋",
+	43:"旭",
+	44:"杏",
+	45:"朝",
+	46:"楓",
+	47:"歩",
+	48:"嵐",
+	49:"スミレ",
+	50:"勇",
+	51:"ユリ",
+	52:"新",
+	53:"泉",
+	54:"桃",
+	55:"樹",
+	56:"耕",
+	57:"蘭",
+	58:"椿",
+	59:"栄",
+	60:"キク",
+	61:"ウメ",
+	62:"昴",
+	63:"宙",
+	64:"力",
+	65:"虎",
+	66:"ひばり",
+	67:"昇",
+	68:"学",
+	69:"苺",
+	70:"豊",
+	71:"陸",
+	72:"一郎",
+	73:"柚子",
+	74:"雪",
+	75:"緑",
+	76:"夢",
+	77:"空",
+	78:"のぞみ",
+	79:"ひかり",
+	:"明")
+]]></Implementation>
+</Method>
+
+<Method name="KanaName">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<Implementation><![CDATA[..KanaNameSei()_"　"_..KanaNameMei()
+]]></Implementation>
+</Method>
+
+<Method name="KanaNameSei">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<Implementation><![CDATA[
+$case($r(252),
+	0:"フジ",
+	1:"ホッカイドウ",
+	2:"アオモリ",
+	3:"イワテ",
+	4:"ミヤギ",
+	5:"アキタ",
+	6:"ヤマガタ",
+	7:"フクシマ",
+	8:"イバラキ",
+	9:"トチギ",
+	10:"グンマ",
+	11:"サイタマ",
+	12:"チバ",
+	13:"トウキョウ",
+	14:"カナガワ",
+	15:"ニイガタ",
+	16:"トヤマ",
+	17:"イシカワ",
+	18:"フクイ",
+	19:"ヤマナシ",
+	20:"ナガノ",
+	21:"ギフ",
+	22:"シズオカ",
+	23:"アイチ",
+	24:"ミエ",
+	25:"シガ",
+	26:"キョウト",
+	27:"オオサカ",
+	28:"ヒョウゴ",
+	29:"ナラ",
+	30:"ワカヤマ",
+	31:"トットリ",
+	32:"シマネ",
+	33:"オカヤマ",
+	34:"ヒロシマ",
+	35:"ヤマグチ",
+	36:"トクシマ",
+	37:"カガワ",
+	38:"エヒメ",
+	39:"フクオカ",
+	40:"サガ",
+	41:"ナガサキ",
+	42:"クマモト",
+	43:"オオイタ",
+	44:"ミヤザキ",
+	45:"カゴシマ",
+	46:"オキナワ",
+	47:"トウホク",
+	48:"キンキ",
+	49:"シコク",
+	50:"チュウブ",
+	51:"アサクサ",
+	52:"キュウシュウ",
+	53:"カントウ",
+	54:"イシブタイ",
+	55:"アオヅカ",
+	56:"アカドヤマ",
+	57:"アンドンヤマ",
+	58:"アマヅカ",
+	59:"ウマミ",
+	60:"ウエヤマ",
+	61:"ウメヤマ",
+	62:"ウブスナ",
+	63:"オオトリヅカ",
+	64:"コウフク",
+	65:"アスカ",
+	66:"アベノモンジュ",
+	67:"アンコク",
+	68:"イシヤマ",
+	69:"イッコウ",
+	70:"エイゲン",
+	71:"エンリャク",
+	72:"オオミネサン",
+	73:"オンジョウ",
+	74:"カンエイ",
+	75:"ガンコウ",
+	76:"イブキヤマ",
+	77:"ダイセン",
+	78:"ツルギザン",
+	79:"アソザン",
+	80:"キリシマヤマ",
+	81:"クジュウサン",
+	82:"ソボサン",
+	83:"ヤリガタケ",
+	84:"ホタカダケ",
+	85:"ヒジリダケ",
+	86:"ノリクラダケ",
+	87:"ハクサン",
+	88:"シオミダケ",
+	89:"ヒカリダケ",
+	90:"カサガタケ",
+	91:"オンタケサン",
+	92:"アマギサン",
+	93:"アイノダケ",
+	94:"アカイシダケ",
+	95:"アラシマダケ",
+	96:"カシマヤリガタケ",
+	97:"ゴリュウダケ",
+	98:"シロウマダケ",
+	99:"スイショウダケ",
+	100:"タテヤマ",
+	101:"ツルギダケ",
+	102:"ヤクシダケ",
+	103:"ワシバダケ",
+	104:"ヤツガタケ",
+	105:"ミョウコウサン",
+	106:"ヤケダケ",
+	107:"マキハタヤマ",
+	108:"ホウオウサン",
+	109:"ヒウチヤマ",
+	110:"センジョウガタケ",
+	111:"ダイボサツレイ",
+	112:"キリガミネ",
+	113:"ウツクシガハラ",
+	114:"アマカザリヤマ",
+	115:"アカギサン",
+	116:"バンダイサン",
+	117:"ハッコウダサン",
+	118:"ナスダケ",
+	119:"チョウカイサン",
+	120:"ザオウサン",
+	121:"アヅマヤマ",
+	122:"アサヒダケ",
+	123:"ヨウテイザン",
+	124:"ラウスダケ",
+	125:"トカチダケ",
+	126:"ダイセツザン",
+	127:"アカンダケ",
+	128:"リシリダケ",
+	129:"ノゾミ",
+	130:"コダマ",
+	131:"ハヤテ",
+	132:"ヤマビコ",
+	133:"ナスノ",
+	134:"トキ",
+	135:"タニガワ",
+	136:"アサマヤマ",
+	137:"ツバサ",
+	138:"コマチ",
+	139:"ツバメ",
+	140:"アオバ",
+	141:"ギンザセン",
+	142:"マルノウチセン",
+	143:"ヒビヤセン",
+	144:"トウザイセン",
+	145:"チヨダセン",
+	146:"ユウラクチョウセン",
+	147:"ハンゾウモンセン",
+	148:"ナンボクセン",
+	149:"フクトシンセン",
+	150:"アサクサセン",
+	151:"ミタセン",
+	152:"シンジュクセン",
+	153:"ヤマノテセン",
+	154:"ミドウスジセン",
+	155:"タニマチセン",
+	156:"ヨツバシセン",
+	157:"チュウオウセン",
+	158:"センニチマエセン",
+	159:"サカイスジセン",
+	160:"ギンザ",
+	161:"ヨコハマ",
+	162:"カブキ",
+	163:"ハラジュク",
+	164:"サッポロ",
+	165:"ハコダテ",
+	166:"アサヒカワ",
+	167:"アバシリ",
+	168:"センダイ",
+	169:"コウチ",
+	170:"イシヅチヤマ",
+	171:"オオエドセン",
+	172:"ヤトゴハラ",
+	173:"ヤトイハラ",
+	174:"ヤトロクハラ",
+	175:"ヤトジハラ",
+	176:"ヤトナハラ",
+	177:"ヤトミハラ",
+	178:"ヤトヤハラ",
+	179:"ヤトシハラ",
+	180:"ヤトクハラ",
+	181:"クトハラ",
+	182:"クトイハラ",
+	183:"クトジハラ",
+	184:"クトミハラ",
+	185:"クトシハラ",
+	186:"クトゴハラ",
+	187:"クトロクハラ",
+	188:"クトナハラ",
+	189:"クトヤハラ",
+	190:"クトクハラ",
+	191:"モモハラ",
+	192:"モモイハラ",
+	193:"モモジハラ",
+	194:"モモミハラ",
+	195:"ニトヤフジ",
+	196:"ミトロクフジ",
+	197:"ミトナフジ",
+	198:"ニトクフジ",
+	199:"ミトヤフジ",
+	200:"ミトフジ",
+	201:"ミトクフジ",
+	202:"ミトイフジ",
+	203:"シトフジ",
+	204:"ミトジフジ",
+	205:"シトイフジ",
+	206:"ミトミフジ",
+	207:"シトジフジ",
+	208:"ミトシフジ",
+	209:"シトミフジ",
+	210:"ミトゴフジ",
+	211:"シトシフジ",
+	212:"シトゴフジ",
+	213:"シトロクフジ",
+	214:"シトナフジ",
+	215:"シトヤフジ",
+	216:"シトクフジ",
+	217:"ゴトフジ",
+	218:"ゴトイフジ",
+	219:"ゴトジフジ",
+	220:"ゴトミフジ",
+	221:"ゴトシフジ",
+	222:"モモシハラ",
+	223:"モモゴハラ",
+	224:"モモロクハラ",
+	225:"モモナハラ",
+	226:"モモヤハラ",
+	227:"モモクハラ",
+	228:"イタニ",
+	229:"ニタニ",
+	230:"ミタニ",
+	231:"シタニ",
+	232:"ゴタニ",
+	233:"ロクタニ",
+	234:"ナタニ",
+	235:"ヤタニ",
+	236:"クタニ",
+	237:"トタニ",
+	238:"トイタニ",
+	239:"トジタニ",
+	240:"ゴトゴフジ",
+	241:"ゴトロクフジ",
+	242:"ゴトナフジ",
+	243:"ゴトヤフジ",
+	244:"ゴトクフジ",
+	245:"ロクトフジ",
+	246:"ロクトイフジ",
+	247:"ロクトジフジ",
+	248:"ロクトミフジ",
+	249:"ロクトシフジ",
+	250:"ロクトゴフジ",
+	251:"ロクトロクフジ",
+	:"ロクトナフジ")
+]]></Implementation>
+</Method>
+
+<Method name="KanaNameMei">
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<Implementation><![CDATA[
+$case($r(77),
+	0:"ジロウ",
+	1:"コダマ",
+	2:"サブロウ",
+	3:"ハヤテ",
+	4:"シロウ",
+	5:"ゴロウ",
+	6:"ヤマビコ",
+	7:"ロクロウ",
+	8:"ナスノ",
+	9:"トキ",
+	10:"アサマ",
+	11:"ツバサ",
+	12:"ナナロウ",
+	13:"ハチロウ",
+	14:"コマチ",
+	15:"ツバメ",
+	16:"キュウロウ",
+	17:"アオバ",
+	18:"アサヒ",
+	19:"ハナコ",
+	20:"フジコ",
+	21:"ジュウロウ",
+	22:"タロウ",
+	23:"フジミ",
+	24:"フジエ",
+	25:"タケオ",
+	26:"フジタ",
+	27:"フジオ",
+	28:"フジカ",
+	29:"フジヨ",
+	30:"フジナ",
+	31:"フジキチ",
+	32:"サクラ",
+	33:"フジスケ",
+	34:"アオイ",
+	35:"フジノスケ",
+	36:"フジロウ",
+	37:"キキョウ",
+	38:"アヤメ",
+	39:"フジマツ",
+	40:"アオ",
+	41:"アキ",
+	42:"アンズ",
+	43:"アサ",
+	44:"カエデ",
+	45:"アユム",
+	46:"アラシ",
+	47:"スミレ",
+	48:"イサム",
+	49:"ユリ",
+	50:"アラタ",
+	51:"イズミ",
+	52:"モモ",
+	53:"イツキ",
+	54:"コウ",
+	55:"ラン",
+	56:"ツバキ",
+	57:"サカエ",
+	58:"キク",
+	59:"ウメ",
+	60:"スバル",
+	61:"ソラ",
+	62:"チカラ",
+	63:"トラ",
+	64:"ヒバリ",
+	65:"ノボル",
+	66:"マナブ",
+	67:"イチゴ",
+	68:"ユタカ",
+	69:"リク",
+	70:"イチロウ",
+	71:"ユズ",
+	72:"ユキ",
+	73:"ミドリ",
+	74:"ユメ",
+	75:"ノゾミ",
+	76:"ヒカリ",
+	:"アキラ")
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Storage.Persistent</Type>
+<DataLocation>^developer.data.Defrag10D</DataLocation>
+<DefaultData>Defrag10DefaultData</DefaultData>
+<IdLocation>^developer.data.Defrag10D</IdLocation>
+<IndexLocation>^developer.data.Defrag10I</IndexLocation>
+<StreamLocation>^developer.data.Defrag10S</StreamLocation>
+<ExtentSize>9998423</ExtentSize>
+<Data name="Defrag10DefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>z施設</Value>
+</Value>
+<Value name="3">
+<Value>z登録者</Value>
+</Value>
+<Value name="4">
+<Value>z登録日時</Value>
+</Value>
+<Value name="5">
+<Value>xActive</Value>
+</Value>
+<Value name="6">
+<Value>zUpdateCount</Value>
+</Value>
+<Value name="7">
+<Value>z初回登録者</Value>
+</Value>
+<Value name="8">
+<Value>z初回登録日時</Value>
+</Value>
+<Value name="9">
+<Value>dele</Value>
+</Value>
+<Value name="10">
+<Value>旧ID</Value>
+</Value>
+<Value name="11">
+<Value>storeCd</Value>
+</Value>
+<Value name="12">
+<Value>patientId</Value>
+</Value>
+<Value name="13">
+<Value>漢字氏名</Value>
+</Value>
+<Value name="14">
+<Value>カナ氏名</Value>
+</Value>
+<Value name="15">
+<Value>ローマ字氏名</Value>
+</Value>
+<Value name="16">
+<Value>漢字旧姓</Value>
+</Value>
+<Value name="17">
+<Value>カナ旧姓</Value>
+</Value>
+<Value name="18">
+<Value>性別</Value>
+</Value>
+<Value name="19">
+<Value>生年月日</Value>
+</Value>
+<Value name="20">
+<Value>死亡日時</Value>
+</Value>
+<Value name="21">
+<Value>コメント</Value>
+</Value>
+<Value name="22">
+<Value>新患登録日</Value>
+</Value>
+<Value name="23">
+<Value>ABO血液型</Value>
+</Value>
+<Value name="24">
+<Value>RH血液型</Value>
+</Value>
+<Value name="25">
+<Value>未使用区分</Value>
+</Value>
+</Data>
+<Property name="%%CLASSNAME">
+<Selectivity>100.0000%</Selectivity>
+<AverageFieldSize>2</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,16,$lb("-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000"),$lb(21,21,21,21,21,21,21,21,21,21,21,21,21,21,21),$lb(758198320,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,758198320))</Histogram>
+</Property>
+<Property name="%%ID">
+<Selectivity>1</Selectivity>
+<AverageFieldSize>4.99</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,1,0,$lb(25324,598205,1511167,1991695,2598630,3256101,3945657,4465555,5291448,5896836,6557290,7336885,8074563,8768029,9486023,9987323),$lb(0,0,1,0,0,1,0,0,1,0,0,0,1,0,1),$lb(842347314,842347314,892942386,892942386,825569585,892416305,960049462,825833777,842348856,842348856,858928438,842348081,959722806,859386933,875836981,875836981,892483889,842608948,943273528,892877110,909456695,909456695,926102326,926102326,942683956,808924213,926300208,943142456,959723574,876099120,959985459,960051255))</Histogram>
+</Property>
+<Property name="ABO血液型">
+<Selectivity>25.0000%</Selectivity>
+<AverageFieldSize>3.24</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb(" A"," A"," A"," A"," AB"," AB"," AB"," AB"," B"," B"," B"," B"," O"," O"," O"," O"),$lb(3,3,3,2,4,4,4,1,3,3,3,1,3,3,3),$lb(541130752,0,0,0,0,0,0,0,1107296256,0,0,0,0,0,0,1094844416,1107296256,0,0,0,0,0,0,1107296256,1325400064,0,0,0,0,0,0,542048256))</Histogram>
+</Property>
+<Property name="RH血液型">
+<Selectivity>50.0000%</Selectivity>
+<AverageFieldSize>3</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb(" +"," +"," +"," +"," +"," +"," +"," +"," -"," -"," -"," -"," -"," -"," -"," -"),$lb(3,3,3,3,3,3,3,1,3,3,3,3,3,3,3),$lb(539688960,0,0,0,0,0,0,0,0,0,0,0,0,0,0,721420288,754974720,0,0,0,0,0,0,0,0,0,0,0,0,0,0,539820032))</Histogram>
+</Property>
+<Property name="dele">
+<Selectivity>100.0000%</Selectivity>
+<AverageFieldSize>2</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,1,0,$lb(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(805306368,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,805306368))</Histogram>
+</Property>
+<Property name="patientId">
+<Selectivity>0.0000100015772487321%</Selectivity>
+<AverageFieldSize>13</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb(" 11730025324"," 11730598205"," 11731511167"," 11731991695"," 11732598630"," 11733256101"," 11733945657"," 11734465555"," 11735291448"," 11735896836"," 11736557290"," 11737336885"," 11738074563"," 11738768029"," 11739486023"," 11739987323"),$lb(6,5,6,5,5,6,5,5,6,5,5,5,6,5,6),$lb(540094775,808596787,892942386,808794424,825569585,892416305,960049462,825833777,842348856,842348856,858928438,842348081,959722806,859386933,875836981,875836981,892483889,842608948,943273528,892877110,909456695,909456695,926102326,926102326,942683956,808924213,926300208,943142456,959723574,876099120,959985459,540094775))</Histogram>
+</Property>
+<Property name="storeCd">
+<Selectivity>100.0000%</Selectivity>
+<AverageFieldSize>6</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb(" 1173"," 1173"," 1173"," 1173"," 1173"," 1173"," 1173"," 1173"," 1173"," 1173"," 1173"," 1173"," 1173"," 1173"," 1173"," 1173"),$lb(6,6,6,6,6,6,6,6,6,6,6,6,6,6,6),$lb(540094775,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,540094775))</Histogram>
+</Property>
+<Property name="xActive">
+<Selectivity>100.0000%</Selectivity>
+<AverageFieldSize>3</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,1,0,$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(822083584,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,822083584))</Histogram>
+</Property>
+<Property name="zUpdateCount">
+<Selectivity>100.0000%</Selectivity>
+<AverageFieldSize>3</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,1,0,$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(822083584,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,822083584))</Histogram>
+</Property>
+<Property name="z初回登録日時">
+<Selectivity>0.3133%</Selectivity>
+<AverageFieldSize>21</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb("2024-05-28 11:02:49","2024-05-28 11:06:58","2024-05-28 11:13:52","2024-05-28 11:17:12","2024-05-28 11:21:37","2024-05-28 11:26:16","2024-05-28 11:31:34","2024-05-28 11:35:46","2024-05-28 11:42:31","2024-05-28 11:47:21","2024-05-28 11:52:02","2024-05-28 11:57:36","2024-05-28 12:01:01","2024-05-28 12:04:11","2024-05-28 12:07:24","2024-05-28 12:08:57"),$lb(15,14,15,14,15,14,15,14,15,14,15,12,15,15,15),$lb(842019380,842675257,909784376,808860213,825440821,859452722,926560562,825702961,842086963,825897783,909783350,842414641,858864179,825897780,893006902,859126324,875706931,842674993,926560817,876034610,892484144,842674226,926561078,825898295,842674225,825897009,876228913,876228913,926560820,926560820,943338807,842019380))</Histogram>
+</Property>
+<Property name="z初回登録者">
+<Selectivity>100.0000%</Selectivity>
+<AverageFieldSize>3</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,1,0,$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(822083584,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,822083584))</Histogram>
+</Property>
+<Property name="z施設">
+<Selectivity>100.0000%</Selectivity>
+<AverageFieldSize>3</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,1,0,$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(822083584,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,822083584))</Histogram>
+</Property>
+<Property name="z登録日時">
+<Selectivity>0.3133%</Selectivity>
+<AverageFieldSize>21</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb("2024-05-28 11:02:49","2024-05-28 11:06:58","2024-05-28 11:13:52","2024-05-28 11:17:12","2024-05-28 11:21:37","2024-05-28 11:26:16","2024-05-28 11:31:34","2024-05-28 11:35:46","2024-05-28 11:42:31","2024-05-28 11:47:21","2024-05-28 11:52:02","2024-05-28 11:57:36","2024-05-28 12:01:01","2024-05-28 12:04:11","2024-05-28 12:07:24","2024-05-28 12:08:57"),$lb(15,14,15,14,15,14,15,14,15,14,15,12,15,15,15),$lb(842019380,842675257,909784376,808860213,825440821,859452722,926560562,825702961,842086963,825897783,909783350,842414641,858864179,825897780,893006902,859126324,875706931,842674993,926560817,876034610,892484144,842674226,926561078,825898295,842674225,825897009,876228913,876228913,926560820,926560820,943338807,842019380))</Histogram>
+</Property>
+<Property name="z登録者">
+<Selectivity>100.0000%</Selectivity>
+<AverageFieldSize>3</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,1,0,$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(822083584,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,822083584))</Histogram>
+</Property>
+<Property name="カナ旧姓">
+<Selectivity>100.0000%</Selectivity>
+<AverageFieldSize>2</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb(" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "),$lb(2,2,2,2,2,2,2,2,2,2,2,2,2,2,2),$lb(536870912,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,536870912))</Histogram>
+</Property>
+<Property name="カナ氏名">
+<Selectivity>0.0052%</Selectivity>
+<OutlierSelectivity>.000527:"シトクフジ　ソラ"</OutlierSelectivity>
+<AverageFieldSize>19.44</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb(" アイチ　アオ"," アバシリ　ツバサ"," ウエヤマ　ロクロウ"," オンタケサン　フジマツ"," ギンザセン　アユム"," コウフク　ノボル"," サカイスジセン　フジタ"," シトヤフジ　イズミ"," チュウオウセン　ツバサ"," トチギ　ツバキ"," ハッコウダサン　アサヒ"," ホウオウサン　ユズ"," ミトロクフジ　トキ"," ヤタニ　ロクロウ"," ユウラクチョウセン　アオイ"," ワシバダケ　リク"),$lb(2,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(551781026,3816989923,3817050339,3816989411,3816990435,3816990435,3816991459,3816991459,3816992483,3816992483,3816993763,3816993763,3816994275,3816994275,3816994787,3816994787,3817046499,3817046499,3817048291,3817048291,3817050083,3817050083,3817053155,3817053155,3817054179,3817054179,3817055459,3817055459,3817055971,3817055971,3817058275,551781295))</Histogram>
+</Property>
+<Property name="コメント">
+<Selectivity>0.0004%</Selectivity>
+<OutlierSelectivity>.000316:"N1633"</OutlierSelectivity>
+<AverageFieldSize>6.89</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb(" A1001"," B8815"," D6549"," F3011"," G9844"," I7571"," K5545"," M2648"," N858"," P6338"," R3371"," T1106"," U7774"," W5928"," Y3597"," Z9998"),$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(541143344,1093742640,1110980657,1110980657,1144403252,1144403252,1177759793,1177759793,1194932276,1194932276,1228354871,1228354871,1261778228,1261778228,1295136308,1295136308,1312306488,1312306488,1345729331,1345729331,1379087159,1379087159,1412510000,1412510000,1429681975,1429681975,1463105842,1463105842,1496528185,1496528185,1513699641,542783801))</Histogram>
+</Property>
+<Property name="ローマ字氏名">
+<Selectivity>0.0001%</Selectivity>
+<OutlierSelectivity>.000211:"Adams,Ted N."</OutlierSelectivity>
+<AverageFieldSize>17.91</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb(" ADAM,AGNES L."," BROWNE,WILL W."," DJAKOVIC,NATALIYA E."," FINN,BELINDA B."," HAMMEL,BILL E."," IRONHORSE,ZEKE R."," KLINGMAN,DAVID C."," MALKOVICH,JOSEPHINE F."," NOVELLO,EDWARD C."," PETERSBURG,QUIGLEY I."," RODRIGUEZ,MICHAEL R."," TAYLOR,WILL U."," UNDERMAN,KIM I."," WIJNSCHENK,MARIO G."," YANG,ANGELA J."," ZWEIFELHOFER,ZOE N."),$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(541148225,1094992205,1112690519,1112690519,1145717067,1145717067,1179209294,1179209294,1212239181,1212239181,1230131022,1230131022,1263290702,1263290702,1296125003,1296125003,1313822277,1313822277,1346720837,1346720837,1380926546,1380926546,1413568844,1413568844,1431192645,1431192645,1464420942,1464420942,1497452103,1497452103,1515668809,542791493))</Histogram>
+</Property>
+<Property name="性別">
+<Selectivity>33.3333%</Selectivity>
+<AverageFieldSize>3</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb(" 1"," 1"," 1"," 1"," 1"," 1"," 2"," 2"," 2"," 2"," 2"," 3"," 3"," 3"," 3"," 3"),$lb(3,3,3,3,3,1,3,3,3,3,1,3,3,3,3),$lb(540082176,0,0,0,0,0,0,0,0,0,0,822083584,838860800,0,0,0,0,0,0,0,0,838860800,855638016,0,0,0,0,0,0,0,0,540213248))</Histogram>
+</Property>
+<Property name="新患登録日">
+<Selectivity>0.0026%</Selectivity>
+<OutlierSelectivity>.000422:33458</OutlierSelectivity>
+<AverageFieldSize>4.04</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,1,0,$lb(30004,32459,34959,37265,39663,42183,44546,46946,49375,51869,54491,56987,59466,62027,64482,66974),$lb(1,1,1,1,0,1,1,1,0,1,1,1,0,1,1),$lb(858796080,808464436,842282297,842282297,876164409,876164409,926037557,926037557,959854131,859387446,875704632,842086451,875902006,875902006,909718582,909718582,959657781,876163895,892418102,825767481,875837745,875837745,909719607,909719607,959723062,892941366,909258802,842019383,875837490,875837490,909719348,909523255))</Histogram>
+</Property>
+<Property name="旧ID">
+<Selectivity>100.0000%</Selectivity>
+<AverageFieldSize>2</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,1,16,$lb(-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000,-10000000000000000000),$lb(21,21,21,21,21,21,21,21,21,21,21,21,21,21,21),$lb(758198320,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,758198320))</Histogram>
+</Property>
+<Property name="未使用区分">
+<Selectivity>0.9176%</Selectivity>
+<OutlierSelectivity>.990824:0</OutlierSelectivity>
+<AverageFieldSize>2.01</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,1,0,$lb(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1),$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,0),$lb(805306368,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,805306368,822083584,822083584))</Histogram>
+</Property>
+<Property name="死亡日時">
+<Selectivity>0.0040%</Selectivity>
+<OutlierSelectivity>.988292:</OutlierSelectivity>
+<AverageFieldSize>2.22</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,15,$lb("-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","-10000000000000000000","2024-05-28 12:08:57"),$lb(21,21,21,21,21,21,21,21,21,21,21,21,21,21,0),$lb(758198320,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,758198320,842019380,842019380))</Histogram>
+</Property>
+<Property name="漢字旧姓">
+<Selectivity>100.0000%</Selectivity>
+<AverageFieldSize>2</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb(" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "),$lb(2,2,2,2,2,2,2,2,2,2,2,2,2,2,2),$lb(536870912,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,536870912))</Histogram>
+</Property>
+<Property name="漢字氏名">
+<Selectivity>0.0048%</Selectivity>
+<OutlierSelectivity>.000527:"乗鞍岳　楓"</OutlierSelectivity>
+<AverageFieldSize>13.76</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,0,0,$lb(" あおば　あさひ"," 三十七藤　陸"," 九十一原　富士太"," 五十一藤　葵"," 元願　富士太"," 六十五藤　こまち"," 十谷　力"," 四十八藤　蘭"," 奈良　昇"," 巻機山　栄"," 東西線　苺"," 熊本　朝"," 石鎚山　昇"," 興福　太郎"," 阿寒岳　昴"," 鹿島槍ヶ岳　雪"),$lb(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),$lb(551780738,3816915683,3837299173,3837299173,3837369829,3837369829,3837433061,3837433061,3850732521,3850732521,3850743269,3850743269,3851256296,3851256296,3852180453,3852180453,3852830952,3852830952,3854023654,3854023654,3869094376,3869094376,3884354278,3884354278,3886003177,3886003177,3901262055,3901262055,3919101925,3919101925,3921264613,552188351))</Histogram>
+</Property>
+<Property name="生年月日">
+<Selectivity>0.0022%</Selectivity>
+<OutlierSelectivity>.000422:38836</OutlierSelectivity>
+<AverageFieldSize>4.03</AverageFieldSize>
+<Histogram>$lb(.06666666666666666667,1,0,$lb(21551,24671,27639,30589,33718,36788,39955,42850,45769,48926,51960,55012,58318,61165,64071,66986),$lb(1,1,0,1,1,1,0,1,1,0,1,1,0,1,1),$lb(842085685,825570609,875968305,875968305,926298937,842479155,858797368,808794169,859255096,859255096,909588536,909588536,960050485,859388213,875706421,842544432,892810809,892810809,943272502,876099890,892418358,825833008,892350770,892350770,942879032,892875569,909193526,825308725,875575089,875575089,909719606,909523256))</Histogram>
+</Property>
+<SQLMap name="IDKEY">
+<BlockCount>-935488</BlockCount>
+</SQLMap>
+<SQLMap name="a1">
+<BlockCount>-105548</BlockCount>
+</SQLMap>
+<SQLMap name="i1">
+<BlockCount>-343972</BlockCount>
+</SQLMap>
+<SQLMap name="i2">
+<BlockCount>-147020</BlockCount>
+</SQLMap>
+<SQLMap name="unique">
+<BlockCount>-85752</BlockCount>
+</SQLMap>
+</Storage>
+</Class>
+</Export>
