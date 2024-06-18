@@ -8,7 +8,7 @@
 <Parameter name="TestSaveTime">
 <Description>
 規定処理時間</Description>
-<Default>.5</Default>
+<Default>.3</Default>
 </Parameter>
 
 <Parameter name="TestSaveAvg">
